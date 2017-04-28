@@ -1,0 +1,121 @@
+{
+    "mappings": {
+      "event": {
+        "properties": {
+          "creationDate": {
+            "type": "date"
+          },
+          "date": {
+            "type": "date"
+          },
+          "end": {
+            "type": "date"
+          },
+          "headline": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "measure": {
+            "type": "float"
+          },
+          "severity": {
+            "type": "long"
+          },
+          "start": {
+            "type": "date"
+          },
+          "text": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "images": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "events": {
+            "properties": {
+              "creationDate": {
+                "type": "date"
+              },
+              "date": {
+                "type": "date"
+              },
+              "end": {
+                "type": "date"
+              },
+              "headline": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "measure": {
+                "type": "float"
+              },
+              "severity": {
+                "type": "long"
+              },
+              "start": {
+                "type": "date"
+              },
+              "text": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "type": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "images": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+}

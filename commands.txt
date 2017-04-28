@@ -1,0 +1,18 @@
+# run postgres
+docker run --name pg -p 5432:5432 -e POSTGRES_PASSWORD=eventy -e POSTGRES_DB=eventy -e POSTGRES_USER=eventy -d postgres
+
+# myelastic
+docker stop myelastic
+docker rm myelastic
+docker rmi myelastic
+docker build --no-cache=true -t myelastic .
+docker run --restart=always --name myelastic -p 9200:9200 -p 9300:9300 -h myelastic -d myelastic
+docker exec -it myelastic bash
+
+# kibana
+docker stop kibana
+docker run --restart=always --name kibana -e ELASTICSEARCH_URL=http://172.17.0.2:9200 -p 5601:5601 -h kibana -d kibana:5.1
+
+# elastic
+curl -XDELETE localhost:9200/eventy
+curl -XPUT localhost:9200/eventy -d @eventy_mapping.json
