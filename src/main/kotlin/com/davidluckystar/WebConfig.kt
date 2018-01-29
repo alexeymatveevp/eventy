@@ -19,7 +19,7 @@ open class WebConfig : WebMvcConfigurerAdapter() {
         super.addResourceHandlers(registry)
         registry.addResourceHandler("/**")
 //                .addResourceLocations("file:/C:\\dev\\workspace\\eventy-ui\\")
-                .addResourceLocations("file:" + eventyUiLocation);
+                .addResourceLocations("file:" + eventyUiLocation)
     }
 
     override fun addViewControllers(registry: ViewControllerRegistry?) {

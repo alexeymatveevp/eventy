@@ -17,7 +17,10 @@ spring:
 logging:
   level: INFO
 
+server:
+  port: 8080
+  address: 0.0.0.0
 
 custom:
   image.repo: "C:\\Users\\david\\Pictures\\eventy"
-  eventy.ui: "C:\\dev\\workspace\\eventy-ui\\"
+  eventy.ui: "C:\\dev\\workspace\\eventy-ui\\" # last backslash is important!
