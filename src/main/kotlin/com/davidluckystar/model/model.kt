@@ -37,7 +37,7 @@ class EventTypes {
                         listOf("date", "text", "user", "selectedItems"), true, null,
                         listOf("EASY", "HARD"),
                         listOf("SPORT_PUSHUPS", "SPORT_PULLUPS", "SPORT_RUN", "SPORT_JYM"),
-                        "running-men.jpg"),
+                        "sport.jpg"),
                 EventType("SPORT_PUSHUPS", "", "",
                         listOf("measure"), false, null, null, null, null),
                 EventType("SPORT_PULLUPS", "", "",
