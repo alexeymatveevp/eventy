@@ -20,3 +20,4 @@ logging:
 
 custom:
   image.repo: "C:\\Users\\david\\Pictures\\eventy"
+  eventy.ui: "C:\\dev\\workspace\\eventy-ui\\"
