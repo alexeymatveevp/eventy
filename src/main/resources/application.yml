@@ -16,3 +16,7 @@ spring:
       max-file-size: 10MB
 logging:
   level: INFO
+
+
+custom:
+  image.repo: "C:\\Users\\david\\Pictures\\eventy"
