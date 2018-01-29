@@ -38,6 +38,8 @@ dependencies {
     compile "org.apache.logging.log4j:log4j-to-slf4j:+"
 //    compile "org.apache.logging.log4j:log4j-api:2.6.2"
 //    compile "org.apache.logging.log4j:log4j-core:2.6.2"
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
 
 //    compile "com.fasterxml.jackson.module:jackson-core:$jackson_kotlin_version"
 //    compile "com.fasterxml.jackson.module:jackson-annotations:$jackson_kotlin_version"

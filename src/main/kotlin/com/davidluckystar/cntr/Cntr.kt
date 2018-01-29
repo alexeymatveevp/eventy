@@ -7,7 +7,8 @@ import com.davidluckystar.model.GroupEvent
 import com.davidluckystar.model.GroupEventWithId
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.index.query.QueryBuilders.*
+import org.elasticsearch.index.query.QueryBuilders.boolQuery
+import org.elasticsearch.index.query.QueryBuilders.rangeQuery
 import org.elasticsearch.search.sort.SortOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -25,6 +26,19 @@ class Cntr {
 
     @Autowired
     lateinit var om: ObjectMapper
+
+    @RequestMapping("/populate", method = arrayOf(RequestMethod.POST))
+    fun populate(@RequestBody groupEvents: List<GroupEvent>): String {
+//        val resourceAsStream = this.javaClass.classLoader.getResourceAsStream("export_29_jan_2018.json")
+//        val toString = IOUtils.toString(resourceAsStream, "UTF-8")
+//        println(toString)
+//        val readValue = om.readValue<List<GroupEvent>>(toString)
+        groupEvents.forEach {
+            val jsonEvent = om.writeValueAsString(it)
+            client.prepareIndex("eventy", "event").setSource(jsonEvent).execute().get()
+        }
+        return "ok" + System.currentTimeMillis()
+    }
 
     @RequestMapping("/event", method = arrayOf(RequestMethod.POST))
     fun createEvent(@RequestBody ge: GroupEvent): String {
