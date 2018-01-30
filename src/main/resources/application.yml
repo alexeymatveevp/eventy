@@ -24,3 +24,4 @@ server:
 custom:
   image.repo: "C:\\Users\\david\\Pictures\\eventy"
   eventy.ui: "C:\\dev\\workspace\\eventy-ui\\" # last backslash is important!
+  dump.location: "C:\\dev\\workspace\\eventy\\dumps"
