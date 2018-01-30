@@ -26,7 +26,7 @@ class ImageService {
 
     fun uploadImage(creationDate: Date, filename: String, bytes: ByteArray): String {
         val containerDir = sdf.format(creationDate)
-        val dirAbsolutePath = DEFAULT_REPO + File.separator + containerDir
+        val dirAbsolutePath = getImageRepository() + File.separator + containerDir
         val dir = Paths.get(dirAbsolutePath)
         Files.createDirectories(dir)
         val imageAbsolutePath = dirAbsolutePath + File.separator + filename
