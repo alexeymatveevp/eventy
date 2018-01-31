@@ -1,0 +1,64 @@
+[
+  {
+    "query": {
+      "range": {
+        "date": {
+          "to": "2018-01-31"
+        }
+      },
+      "term": {
+        "headline": "alala"
+      }
+    }
+  }
+,
+  {
+    "query": {
+      "bool": {
+        "must": {
+          "term": {
+            "headline": "alala"
+          }
+        },
+        "should": {
+          "range": {
+            "date": {
+              "to": "2018-01-31"
+            }
+          }
+        },
+        "minimum_should_match" : 1
+      }
+    }
+  }
+,
+  {
+    "query": {
+      "match_all": {}
+    },
+    "sort": [
+      {
+        "date": {
+          "order": "desc",
+          "missing": "_last"
+        }
+      },
+      {
+        "creationDate": {
+          "order": "desc",
+          "missing": "_last"
+        }
+      },
+      {
+        "start": {
+          "order": "desc"
+        }
+      },
+      {
+        "end": {
+          "order": "desc"
+        }
+      }
+    ]
+  }
+]

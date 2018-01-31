@@ -8,6 +8,8 @@ import com.davidluckystar.model.GroupEventWithId
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.search.sort.SortBuilder
+import org.elasticsearch.search.sort.SortBuilders
 import org.elasticsearch.search.sort.SortOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import java.time.LocalDate
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by ksavina on 1/30/2018.
@@ -32,6 +35,7 @@ class EventService {
 
     @RequestMapping("/event", method = arrayOf(RequestMethod.POST))
     fun createEvent(@RequestBody ge: GroupEvent): String {
+        // the same on UI but just to double-check
         ge.creationDate = Date()
         if (ge.date == null) {
             ge.date = ge.creationDate
@@ -43,9 +47,6 @@ class EventService {
 
     @RequestMapping("/event", method = arrayOf(RequestMethod.PUT))
     fun updateEvent(@RequestBody ge: GroupEventWithId): String {
-        if (ge.creationDate == null) {
-            throw Exception("no creation date from ui")
-        }
         val jsonEvent = om.writeValueAsString(ge)
         val resp = client.prepareUpdate("eventy", "event", ge.id).setDoc(jsonEvent).get()
         return resp.id
@@ -65,29 +66,37 @@ class EventService {
 //        val sourceAsString = getResp.sourceAsString
 //        val event = om.readValue(sourceAsString, GroupEvent::class.java)
 
-        val query = QueryBuilders.boolQuery()
-                .should(QueryBuilders.rangeQuery("date")
-                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
-                .should(QueryBuilders.rangeQuery("start")
-                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
-                .should(QueryBuilders.rangeQuery("end")
-                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
-                .minimumShouldMatch(1)
+        val query = QueryBuilders.matchAllQuery()
+//                .boolQuery()
+//                .should(QueryBuilders.rangeQuery("date")
+//                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
+//                .should(QueryBuilders.rangeQuery("start")
+//                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
+//                .should(QueryBuilders.rangeQuery("end")
+//                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
+//                .minimumShouldMatch(1)
         val resp = client.prepareSearch("eventy")
                 .setTypes("event")
                 .setSize(10000)
                 .setQuery(query)
-                .addSort("date", SortOrder.DESC)
+                .addSort(SortBuilders.fieldSort("date").order(SortOrder.DESC).missing("_last"))
+                .addSort(SortBuilders.fieldSort("creationDate").order(SortOrder.DESC).missing("_last"))
                 .addSort("start", SortOrder.DESC)
-                .addSort("creationDate", SortOrder.DESC)
                 .addSort("end", SortOrder.DESC)
                 .get()
         val hits = resp.hits.hits
-        return hits.map f@{ hit ->
+        val result = ArrayList<GroupEventWithId>()
+        for (hit in hits) {
             val sas = om.readValue(hit.sourceAsString, GroupEventWithId::class.java)
             sas.id = hit.id
-            return@f sas
+            result.add(sas)
         }
+        return result
+//        return hits.map f@{ hit ->
+//            val sas = om.readValue(hit.sourceAsString, GroupEventWithId::class.java)
+//            sas.id = hit.id
+//            return@f sas
+//        }
     }
 
     @RequestMapping("/event-future", method = arrayOf(RequestMethod.GET))

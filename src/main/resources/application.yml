@@ -16,6 +16,7 @@ spring:
   data:
     elasticsearch:
       cluster-nodes: localhost:9300
+      #cluster-nodes: 138.68.133.117:9300
   http:
     multipart:
       max-file-size: 10MB
