@@ -1,0 +1,7 @@
+curl -XGET 'http://138.68.133.117:9200/eventy/event/_search?pretty' -H 'Content-Type: application/json' -d'
+{
+    "query" : {
+        "term" : { "user" : "alex" }
+    }
+}
+'
