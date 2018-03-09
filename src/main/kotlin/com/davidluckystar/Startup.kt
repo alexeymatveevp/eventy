@@ -1,10 +1,8 @@
 package com.davidluckystar
 
-import com.davidluckystar.model.Event
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.settings.Settings
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.net.InetAddress
-import java.util.*
 import javax.annotation.PostConstruct
 
 /**
@@ -50,6 +47,7 @@ open class Startup {
         client = PreBuiltTransportClient(Settings.EMPTY)
 //            client.addTransportAddress(InetSocketTransportAddress(InetAddress.getByName("localhost"), 9200))
         client.addTransportAddress(InetSocketTransportAddress(InetAddress.getByName(esLocation.substring(0, esLocation.indexOf(":"))), 9300))
+//        client.addTransportAddress(TransportAddress(InetAddress.getByName(esLocation.substring(0, esLocation.indexOf(":"))), 9300))
     }
 
     companion object {

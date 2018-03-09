@@ -7,6 +7,7 @@ import com.davidluckystar.model.GroupEvent
 import com.davidluckystar.model.GroupEventWithId
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.sort.SortBuilders
@@ -59,14 +60,27 @@ class EventService {
     }
 
     @RequestMapping("/event", method = arrayOf(RequestMethod.GET))
-    fun listEvents(): List<GroupEventWithId> {
+    fun listEvents(size: Int?, type: String?, user: String?): List<GroupEventWithId> {
 //        client.prepareGet("")
 //        return repo.findAll().asSequence().toList().toTypedArray()
 //        val getResp = client.prepareGet("eventy", "event", "AVqgClh8pmm6Cbzf5uqa").get()
 //        val sourceAsString = getResp.sourceAsString
 //        val event = om.readValue(sourceAsString, GroupEvent::class.java)
 
-        val query = QueryBuilders.matchAllQuery()
+        var query: QueryBuilder
+        if (type != null || user != null) {
+            query = QueryBuilders.boolQuery()
+            if (type != null) {
+                // need to change ES mapping analyzer
+                // currently SPORT is not working, only sport
+                query = query.must(QueryBuilders.termQuery("type", type.toLowerCase()))
+            }
+            if (user != null) {
+                query = query.must(QueryBuilders.termQuery("user", user))
+            }
+        } else {
+            query = QueryBuilders.matchAllQuery()
+        }
 //                .boolQuery()
 //                .should(QueryBuilders.rangeQuery("date")
 //                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
@@ -75,9 +89,10 @@ class EventService {
 //                .should(QueryBuilders.rangeQuery("end")
 //                        .to(DateUtils.ELASTIC_DATE_FORMAT.format(LocalDate.now())))
 //                .minimumShouldMatch(1)
+
         val resp = client.prepareSearch("eventy")
                 .setTypes("event")
-                .setSize(10000)
+                .setSize(size ?: 10)
                 .setQuery(query)
                 .addSort(SortBuilders.fieldSort("date").order(SortOrder.DESC).missing("_last"))
                 .addSort(SortBuilders.fieldSort("creationDate").order(SortOrder.DESC).missing("_last"))

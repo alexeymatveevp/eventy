@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
  * Created by david on 3/5/2017.
  */
 @RestController
-class Cntr {
+class EventCntr {
 
     @Autowired
     lateinit var eventService: EventService
@@ -34,8 +34,10 @@ class Cntr {
     }
 
     @RequestMapping("/event", method = arrayOf(RequestMethod.GET))
-    fun listEvents(): List<GroupEventWithId> {
-        return eventService.listEvents()
+    fun listEvents(@RequestParam(value = "size", required = false) size: Int?,
+                   @RequestParam(value = "type", required = false) type: String?,
+                   @RequestParam(value = "user", required = false) user: String?): List<GroupEventWithId> {
+        return eventService.listEvents(size, type, user)
     }
 
     @RequestMapping("/event-future", method = arrayOf(RequestMethod.GET))

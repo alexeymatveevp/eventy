@@ -45,7 +45,11 @@ class ImageService {
 
     fun getImage(imageRelativePath: String): ByteArray {
         val parts = imageRelativePath.split(FILE_SEPARATOR)
-        return Files.readAllBytes(Paths.get(getImageRepository() + File.separator + parts[0] + File.separator + parts[1]))
+        val imagePath = Paths.get(getImageRepository() + File.separator + parts[0] + File.separator + parts[1])
+        return if (Files.exists(imagePath)) {
+            Files.readAllBytes(imagePath)
+        }
+        else ByteArray(0)
     }
 
     fun deleteImage(imageRelativePath: String) {
@@ -58,7 +62,9 @@ class ImageService {
         Files.createDirectories(usersFolderPath)
         val listFiles = usersFolderPath.toFile().listFiles()
         val userImage = listFiles.filter { f -> Pattern.compile(user + ".*").matcher(f.name).matches() }.first()
-        return Files.readAllBytes(Paths.get(userImage.absolutePath))
+        val imagePath = Paths.get(userImage.absolutePath)
+        return if (Files.exists(imagePath)) Files.readAllBytes(imagePath)
+        else ByteArray(0)
     }
 
     fun getImageRepository(): String {

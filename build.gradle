@@ -1,29 +1,49 @@
-//apply plugin: 'java'
-//apply plugin: 'idea'
-apply plugin: 'kotlin'
-apply plugin: 'org.springframework.boot'
-
 buildscript {
-    ext.kotlin_version = '1.1.0'
+    ext.kotlin_version = '1.2.30'
     ext.spring_boot_version = '1.3.0.RELEASE'
-    ext.jackson_kotlin_version = '2.8.7'
+    ext.jackson_kotlin_version = '2.9.3'
+    ext.elasticsearch_version = '5.6.3'
 
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:+"
+//        classpath "org.springframework.boot:spring-boot-gradle-plugin:+"
     }
 }
+
+plugins {
+    id 'org.springframework.boot' version '2.0.0.RELEASE'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'io.spring.dependency-management'
 
 repositories {
     mavenCentral()
 }
 
-//configurations {
-//    compile
-//}
+bootJar {
+    mainClassName = 'com.davidluckystar.Application'
+}
+
+bootRun {
+    systemProperties = System.properties
+}
+
+test {
+    testLogging {
+        showStandardStreams = true
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        // print Results: SUCCESS ... after test
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                println "\nResults: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            }
+        }
+    }
+}
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -31,8 +51,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:$spring_boot_version"
     compile "org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version"
 
-    compile "org.elasticsearch.client:transport:5.2.2"
-    compile "org.elasticsearch:elasticsearch:5.2.2"
+    compile "org.elasticsearch.client:transport:$elasticsearch_version"
+    compile "org.elasticsearch:elasticsearch:$elasticsearch_version"
 
 //    compile "org.slf4j:slf4j-api:+"
     compile "org.apache.logging.log4j:log4j-to-slf4j:+"
@@ -53,6 +73,3 @@ task listJars {
     }
 }
 
-bootRun {
-    systemProperties = System.properties
-}
